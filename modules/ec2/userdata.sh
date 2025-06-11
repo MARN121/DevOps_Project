@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Update system
+# Update and install required packages
 yum update -y
+amazon-linux-extras enable epel -y
+amazon-linux-extras install docker -y
+yum install -y git nginx
 
-# Enable Amazon Linux extras for nginx
-amazon-linux-extras enable nginx1 -y
-yum install -y nginx docker git
-
-# Start Docker properly
+# Start and enable services
 systemctl enable docker --now
+systemctl enable nginx
 usermod -aG docker ec2-user
 
-# Clone your React app
+# Clone app
 cd /home/ec2-user
 git clone https://github.com/MARN121/reactapp-devops.git
 chown -R ec2-user:ec2-user reactapp-devops
@@ -20,14 +20,13 @@ cd reactapp-devops
 # Build Docker image
 docker build -t reactapp .
 
-# Run the container on internal port
+# Run Docker container on internal port (e.g., 3000)
 docker run -d -p 3000:80 reactapp
 
-# Set up NGINX reverse proxy to route ALB port 80 to internal 3000
+# Configure Nginx reverse proxy to Docker container
 cat <<EOF > /etc/nginx/conf.d/reactapp.conf
 server {
     listen 80;
-    server_name app.nendo.fun;
 
     location / {
         proxy_pass http://127.0.0.1:3000;
@@ -40,5 +39,5 @@ server {
 }
 EOF
 
-# Validate and start NGINX after config is placed
-nginx -t && systemctl enable nginx --now && systemctl restart nginx
+# Restart Nginx with new config
+nginx -t && systemctl restart nginx
