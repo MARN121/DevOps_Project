@@ -2,7 +2,7 @@
 
 ## 📌 Objective
 
-Design and deploy a scalable, secure, containerized cloud infrastructure using AWS and Terraform. The solution includes full CI/CD-compatible deployment of a frontend, backend, databases, and a business intelligence (BI) dashboard with domain and SSL support.
+The objective of this project is to build a scalable, secure, and containerized AWS infrastructure using Terraform. The environment includes Auto Scaling EC2 instances running Nginx, Docker, and Node.js 20, private RDS databases, and an Application Load Balancer with HTTPS support. It also involves deploying multi-stage Dockerized frontend and backend applications, integrating a BI tool (Redash or Metabase), setting up domain and SSL certificates, enabling SSH tunneling for secure database access, and delivering a live-updating dashboard connected to the database.
 
 ---
 
@@ -22,55 +22,55 @@ Design and deploy a scalable, secure, containerized cloud infrastructure using A
 
 ## 📂 Project Structure
 
-Project/
-├── main.tf # 🔧 Root Terraform file to define all modules and infrastructure
-├── outputs.tf # 📤 Exposes values like ALB DNS or RDS endpoints
-├── providers.tf # 🌍 Configures AWS provider and region
-├── terraform.tfvars # 📝 Defines input variables (e.g., domain name, RDS credentials, ACM certs)
-├── variables.tf # 📥 Declares input variables and their types
-├── README.md # 📘 Documentation and usage guide for the project
-├── modules/ # 📦 Reusable, modular Terraform components
-│ ├── network/ # 🌐 VPC, subnets, route tables
-│ │ ├── main.tf
-│ │ ├── outputs.tf
-│ │ └── variables.tf  
-│ ├── security_groups/ # 🔒 Security groups for EC2, RDS, and ALB
-│ │ ├── main.tf
-│ │ ├── outputs.tf
-│ │ └── variables.tf
-│ ├── target_group/ # 🎯 Target group to connect EC2 instances with ALB
-│ │ ├── main.tf
-│ │ ├── outputs.tf
-│ │ └── variables.tf
-│ ├── ec2/ # 💻 EC2 Auto Scaling Group for frontend app
-│ │ ├── main.tf
-│ │ ├── outputs.tf
-│ │ └── variables.tf
-│ ├── ec2-bi/ # 📊 EC2 instance for Metabase BI tool
-│ │ ├── main.tf
-│ │ ├── outputs.tf
-│ │ └── variables.tf
-│ ├── rds/ # 🛢️ MySQL and PostgreSQL RDS setup in private subnets
-│ │ ├── main.tf
-│ │ ├── outputs.tf
-│ │ └── variables.tf
-│ ├── alb/ # 🌐 ALB for main application (frontend/backend)
-│ │ ├── main.tf
-│ │ ├── outputs.tf
-│ │ └── variables.tf
-│ ├── alb-bi/ # 🌐 ALB for Metabase BI tool (bi.nendo.fun)
-│ │ ├── main.tf
-│ │ ├── outputs.tf
-│ │ └── variables.tf
-│ └── route53/ # 🌍 Route 53 DNS records for app and BI tool
-│ ├── main.tf
-│ ├── outputs.tf
-│ └── variables.tf
-├── userdata/ # 🧩 EC2 user data scripts
-│ ├── userdata-app.sh # ⚙️ Installs React app with NGINX and Docker
-│ └── userdata-bi.sh # 📊 Installs Metabase Docker container
-├── docker/ # 🐳 (Optional) Dockerfiles or supporting config if maintained here
-└── snapshot-and-destroy.sh # 💥 Script to snapshot RDS DB and run `terraform destroy`
+Project/<br>
+├── main.tf # 🔧 Root Terraform file to define all modules and infrastructure<br>
+├── outputs.tf # 📤 Exposes values like ALB DNS or RDS endpoints<br>
+├── providers.tf # 🌍 Configures AWS provider and region<br>
+├── terraform.tfvars # 📝 Defines input variables (e.g., domain name, RDS credentials, ACM certs)<br>
+├── variables.tf # 📥 Declares input variables and their types<br>
+├── README.md # 📘 Documentation and usage guide for the project<br>
+├── modules/ # 📦 Reusable, modular Terraform components<br>
+│ ├── network/ # 🌐 VPC, subnets, route tables<br>
+│ │ ├── main.tf<br>
+│ │ ├── outputs.tf<br>
+│ │ └── variables.tf  <br>
+│ ├── security_groups/ # 🔒 Security groups for EC2, RDS, and ALB<br>
+│ │ ├── main.tf<br>
+│ │ ├── outputs.tf<br>
+│ │ └── variables.tf<br>
+│ ├── target_group/ # 🎯 Target group to connect EC2 instances with ALB<br>
+│ │ ├── main.tf<br>
+│ │ ├── outputs.tf<br>
+│ │ └── variables.tf<br>
+│ ├── ec2/ # 💻 EC2 Auto Scaling Group for frontend app<br>
+│ │ ├── main.tf<br>
+│ │ ├── outputs.tf<br>
+│ │ └── variables.tf<br>
+│ ├── ec2-bi/ # 📊 EC2 instance for Metabase BI tool<br>
+│ │ ├── main.tf<br>
+│ │ ├── outputs.tf<br>
+│ │ └── variables.tf<br>
+│ ├── rds/ # 🛢️ MySQL and PostgreSQL RDS setup in private subnets<br>
+│ │ ├── main.tf<br>
+│ │ ├── outputs.tf<br>
+│ │ └── variables.tf<br>
+│ ├── alb/ # 🌐 ALB for main application (frontend/backend)<br>
+│ │ ├── main.tf<br>
+│ │ ├── outputs.tf<br>
+│ │ └── variables.tf<br>
+│ ├── alb-bi/ # 🌐 ALB for Metabase BI tool (bi.nendo.fun)<br>
+│ │ ├── main.tf<br>
+│ │ ├── outputs.tf<br>
+│ │ └── variables.tf<br>
+│ └── route53/ # 🌍 Route 53 DNS records for app and BI tool<br>
+│ ├── main.tf<br>
+│ ├── outputs.tf<br>
+│ └── variables.tf<br>
+├── userdata/ # 🧩 EC2 user data scripts<br>
+│ ├── userdata-app.sh # ⚙️ Installs React app with NGINX and Docker<br>
+│ └── userdata-bi.sh # 📊 Installs Metabase Docker container<br>
+├── docker/ # 🐳 (Optional) Dockerfiles or supporting config if maintained here<br>
+└── snapshot-and-destroy.sh # 💥 Script to snapshot RDS DB and run `terraform destroy`<br>
 
 ---
 
@@ -137,28 +137,28 @@ Project/
 
 ## 🚀 Deployment Instructions
 
-1. Clone the repo
-   git clone https://github.com/MARN121/reactapp-devops.git #Application Repository
+1. Clone the repo<br>
+   git clone https://github.com/MARN121/reactapp-devops.git #Application Repository <br>
 
-2. Configure your `terraform.tfvars` with:
-   project_name = "your-project" #Set Project Name
-   domain_name = "XYZ.com" #Domain Name
-   hosted_zone_id = "Z01XXXXXX" # Your Route 53 Hosted Zone
-   alb_zone_id = "Z35SXDOTRQ7X7K" # ALB Zone ID (us-east-1)
-   db_username = "admin" # DB Name
-   db_password = "StrongPassword123" # DB Password
-   acm_certificate_arn= "arn:aws:acm:..." #ACM Certificate
-   key_name = "your-key-pair" #Key Name from Key Pairs
-   aws_region = "us-east-1" #AWS Region
+2. Configure your `terraform.tfvars` with:<br>
+   project_name = "your-project" #Set Project Name <br>
+   domain_name = "XYZ.com" #Domain Name <br>
+   hosted_zone_id = "Z01XXXXXX" # Your Route 53 Hosted Zone <br>
+   alb_zone_id = "Z35SXDOTRQ7X7K" # ALB Zone ID (us-east-1) <br>
+   db_username = "admin" # DB Name <br>
+   db_password = "StrongPassword123" # DB Password <br>
+   acm_certificate_arn= "arn:aws:acm:..." #ACM Certificate <br>
+   key_name = "your-key-pair" #Key Name from Key Pairs <br>
+   aws_region = "us-east-1" #AWS Region <br>
 
-3. Initialize and apply:
-   terraform init # Initializes Terraform in the current directory
-   terraform plan # Shows the execution plan (what Terraform will do)
-   terraform apply # Provisions the resources defined in .tf files
-   terraform destroy # Destroys all Terraform-managed infrastructure
+3. Initialize and apply:<br>
+   terraform init # Initializes Terraform in the current directory <br>
+   terraform plan # Shows the execution plan (what Terraform will do) <br>
+   terraform apply # Provisions the resources defined in .tf files <br>
+   terraform destroy # Destroys all Terraform-managed infrastructure <br>
 
 # 👨‍💻 Author
 
-Muhammad Asad ur Rehman Nadeem
-DevOps Final Project @ IBA | 2025
-GitHub: @MARN121
+Muhammad Asad ur Rehman Nadeem <br>
+DevOps Final Project @ IBA | 2025 <br>
+GitHub: @MARN121 <br>
